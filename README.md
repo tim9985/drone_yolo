@@ -49,6 +49,100 @@ python eval_domain.py --imgsz 1280 \
 
 ---
 
+## ⚠ 먼저 읽을 것 — 모르면 반드시 걸리는 것들
+
+### 1. `wisard_sept` 도메인의 mAP 0.0 은 **정상이다**
+
+평가하면 이렇게 나온다. 고장이 아니다.
+
+```
+visdrone_baseline   wisard_sept   289장   mAP50 0.0
+all_nomad+wisard    wisard_sept   289장   mAP50 0.0
+```
+
+이 289장에는 **사람이 한 명도 없다.** 그래서 mAP 를 낼 수 없고, 대신
+**오탐(false positive) 측정용**으로 쓴다. "사람 없는 배경에서 몇 건이나
+잘못 신고하는가"를 보는 도메인이다. 판단은 `wisard_jan`(겨울) 과
+`nomad_summer`(여름) 로 한다.
+
+### 2. torch 는 **CPU 빌드가 설치되기 쉽다**
+
+`pip install torch` 를 그냥 하면 CPU 판이 깔려서 GPU 를 못 쓴다.
+아래가 `True` 인지 반드시 확인할 것.
+
+```bash
+python -c "import torch; print(torch.cuda.is_available(), torch.__version__)"
+# True 2.13.0+cu130   ← 이렇게 나와야 한다
+```
+
+`False` 거나 버전에 `+cpu` 가 붙으면 지우고 CUDA 인덱스로 다시 깔아야 한다.
+
+### 3. 한글이 깨지면 콘솔 인코딩 문제다
+
+윈도우 콘솔이 cp949 라 한글 출력에서 `UnicodeEncodeError` 가 난다.
+
+```bash
+set PYTHONIOENCODING=utf-8        # cmd
+$env:PYTHONIOENCODING="utf-8"     # PowerShell (또는 chcp 65001)
+```
+
+같은 이유로 **경로에 한글이 있으면 `cv2.imread`/`imwrite` 가 조용히 실패한다.**
+이 저장소 코드는 `np.fromfile`+`cv2.imdecode` 로 우회해 두었으니, 새 코드를
+쓸 때만 주의하면 된다.
+
+### 4. train/val 은 **배우·비행 단위로 나눠져 있다** — 다시 섞지 말 것
+
+- NOMAD → **배우(Actor) 단위** 분할
+- WiSARD → **비행(flight) 단위** 분할
+
+연속 프레임은 서로 거의 같은 그림이라, 프레임 단위로 무작위 분할하면
+같은 장면이 train 과 val 양쪽에 들어가 **성능이 실제보다 크게 부풀려진다.**
+`data.yaml` 이나 분할 방식을 임의로 바꾸면 기존 수치와 비교가 불가능해진다.
+
+### 5. 비교할 때는 **imgsz 를 맞춰야** 한다
+
+`eval_domain.py --imgsz` 는 평가 해상도다. 960 으로 학습한 모델을 1280 으로
+평가하면 학습 때와 조건이 달라져 숫자가 왜곡된다. 위 4번 명령이
+세 모델을 `--imgsz 1280` 으로 통일해 재는 이유다.
+
+신뢰도 임계값 **0.15** 는 재현율에 2배 가중한 F2 가 최대가 되는 지점으로
+정한 값이다(`metrics/threshold_tuning.csv`). 놓치는 것보다 잘못 신고하는
+쪽이 낫다는 판단이며, 해상도를 바꿔도 이 값은 그대로 쓴다.
+
+---
+
+## ⚠ 시뮬레이터를 돌릴 때만 해당
+
+학습·평가만 할 거면 건너뛰어도 된다.
+
+### 종료 순서를 지킬 것 — **언리얼 먼저, SITL 나중**
+
+역순으로 끄면 **언리얼이 응답 없음 상태로 멈춘다.** WSL 정리 시
+`arducopter`, `sim_vehicle.py` 외에 **`mavproxy` 도 같이** 종료해야 한다.
+
+### Cosys-AirSim 은 원본 AirSim 과 **함수 반환 순서가 다르다**
+
+```python
+# 레거시 AirSim : to_eularian_angles()          → (pitch, roll, yaw)
+# Cosys-AirSim  : quaternion_to_euler_angles()  → (roll, pitch, yaw)
+```
+
+이름만 바꿔 쓰면 **에러 없이 roll 과 pitch 가 뒤바뀐다.** 실제로 겪은 문제다.
+
+### `settings.json` 에 카메라를 직접 정의하면 언리얼이 죽는다
+
+`Vehicles.<차량>.Cameras` 에 `"0"` 같은 카메라를 정의하면 Cosys-AirSim 이
+새 카메라를 NaN 위치에 스폰하다 **크래시**한다. 해상도·화각은 반드시
+**루트 레벨 `CameraDefaults.CaptureSettings`** 에서 바꿀 것.
+
+### SITL 연결
+
+- `--no-mavproxy` 일 때 GCS 링크는 **TCP 127.0.0.1:5760** (UDP 14550 아님)
+- TCP 5760 은 **단일 클라이언트만** 허용 — 재연결 전 이전 소켓을 닫아야 한다
+- EKF/GPS 준비까지 부팅 후 **30~60초** 걸린다. arm 이 바로 안 되는 건 정상이다
+
+---
+
 ## 설치
 
 ```bash
@@ -68,14 +162,12 @@ pip install -r requirements.txt
 ## 데이터셋 — **저장소에 없다**
 
 `data/` 는 **18.3 GB · 15만 파일**이고, NOMAD·WiSARD 는 각자 라이선스가 있는 공개
-연구 데이터셋이라 재배포하지 않는다. 두 가지 방법 중 하나로 준비한다.
+연구 데이터셋이라 재배포하지 않는다.
 
-### 방법 A — 정서인에게 변환 완료본을 받는다 (권장, 약 3 GB)
+> **이번에는 방법 B 로 간다.** 개발 노트북에 NOMAD 원본 이미지가 남아 있지 않아
+> (용량 확보하며 삭제) 변환 완료본을 통째로 넘길 수 없다.
 
-`data/dataset_nomad`, `data/dataset_nomad_a11_20`, `data/dataset_wisard` 세 폴더만
-받아서 `data/` 아래 그대로 두면 된다. 외장 하드나 네트워크 공유로 전달.
-
-### 방법 B — 원본을 받아 직접 변환한다
+### 방법 B — 원본을 받아 직접 변환한다 ← **이 방법을 쓴다**
 
 **원본을 아래 경로에 그대로 풀어 놓아야 한다.** 스크립트가 이 위치를 고정으로 본다.
 
@@ -103,6 +195,12 @@ python wisard_prep.py      # WiSARD 원본 → data/dataset_wisard
 ```
 
 각 스크립트는 `--limit` 로 일부만 먼저 돌려볼 수 있다. 전체는 수십 분 걸린다.
+
+### 방법 A — 변환 완료본을 받는다 (약 3 GB, 이번에는 해당 없음)
+
+`data/dataset_nomad`, `data/dataset_nomad_a11_20`, `data/dataset_wisard` 세 폴더를
+받아 `data/` 아래 그대로 두면 된다. WiSARD 쪽은 원본이 남아 있어 이 방법도 되지만,
+NOMAD 가 없으므로 둘을 섞지 말고 **방법 B 로 통일하는 편이 낫다.**
 
 > **주의 — 리샘플링 기준이 예전 값이다.**
 > 두 스크립트는 원본을 그대로 쓰지 않고, **운용 조건에서 사람이 보일 크기**에
