@@ -1,0 +1,235 @@
+{
+  "note": "Cosys-AirSim 인스턴스 segmentation. rgb는 colormap.npy[instance_index] 값이며 seg 이미지 바이트 순서와 동일(RGB). cv2.imwrite/imread 왕복은 배열을 보존하므로 auto_label.py 는 이 값을 그대로 비교한다.",
+  "classes": {
+    "0": "person",
+    "1": "vehicle"
+  },
+  "person": [
+    {
+      "name": "SkeletalMeshActor_12",
+      "instance_index": 171,
+      "rgb": [
+        159,
+        223,
+        127
+      ],
+      "class_id": 0,
+      "ned": [
+        -1.6498063802719116,
+        -7.449471950531006,
+        0.8840000033378601
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_13",
+      "instance_index": 172,
+      "rgb": [
+        159,
+        223,
+        191
+      ],
+      "class_id": 0,
+      "ned": [
+        11.156481742858887,
+        -0.21940922737121582,
+        0.8840000033378601
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_14",
+      "instance_index": 173,
+      "rgb": [
+        159,
+        223,
+        95
+      ],
+      "class_id": 0,
+      "ned": [
+        6.996395111083984,
+        -11.922351837158203,
+        0.8840000033378601
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_15",
+      "instance_index": 174,
+      "rgb": [
+        159,
+        223,
+        159
+      ],
+      "class_id": 0,
+      "ned": [
+        1.8679311275482178,
+        -1.793217658996582,
+        0.8840000033378601
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_16",
+      "instance_index": 175,
+      "rgb": [
+        255,
+        223,
+        223
+      ],
+      "class_id": 0,
+      "ned": [
+        12.469747543334961,
+        -12.283021926879883,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_17",
+      "instance_index": 177,
+      "rgb": [
+        191,
+        223,
+        223
+      ],
+      "class_id": 0,
+      "ned": [
+        -0.3591051995754242,
+        2.854898452758789,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_18",
+      "instance_index": 179,
+      "rgb": [
+        159,
+        223,
+        223
+      ],
+      "class_id": 0,
+      "ned": [
+        2.002168893814087,
+        -7.191016674041748,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_19",
+      "instance_index": 181,
+      "rgb": [
+        223,
+        255,
+        127
+      ],
+      "class_id": 0,
+      "ned": [
+        14.759781837463379,
+        -0.7353630661964417,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_20",
+      "instance_index": 182,
+      "rgb": [
+        223,
+        255,
+        191
+      ],
+      "class_id": 0,
+      "ned": [
+        7.925095081329346,
+        -0.07694347947835922,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_21",
+      "instance_index": 183,
+      "rgb": [
+        223,
+        255,
+        95
+      ],
+      "class_id": 0,
+      "ned": [
+        14.872374534606934,
+        3.374617099761963,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_22",
+      "instance_index": 184,
+      "rgb": [
+        223,
+        255,
+        159
+      ],
+      "class_id": 0,
+      "ned": [
+        14.361856460571289,
+        -4.140666484832764,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_23",
+      "instance_index": 185,
+      "rgb": [
+        223,
+        127,
+        255
+      ],
+      "class_id": 0,
+      "ned": [
+        1.8477736711502075,
+        5.5556769371032715,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_24",
+      "instance_index": 186,
+      "rgb": [
+        223,
+        127,
+        127
+      ],
+      "class_id": 0,
+      "ned": [
+        -0.0920608714222908,
+        -4.574225425720215,
+        0.7999999523162842
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_25",
+      "instance_index": 187,
+      "rgb": [
+        223,
+        127,
+        191
+      ],
+      "class_id": 0,
+      "ned": [
+        3.4352540969848633,
+        -11.357346534729004,
+        0.8999999761581421
+      ]
+    },
+    {
+      "name": "SkeletalMeshActor_26",
+      "instance_index": 188,
+      "rgb": [
+        223,
+        127,
+        95
+      ],
+      "class_id": 0,
+      "ned": [
+        7.796464443206787,
+        -7.62898063659668,
+        0.699999988079071
+      ]
+    }
+  ],
+  "vehicle": []
+}

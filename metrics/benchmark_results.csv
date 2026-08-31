@@ -1,0 +1,5 @@
+﻿model,imgsz,fps,detections,pass_5fps
+yolov8n_coco,640,40.71,1,True
+yolov8n_coco,960,37.32,0,True
+yolov8s_visdrone,640,42.68,0,True
+yolov8s_visdrone,960,23.39,0,True

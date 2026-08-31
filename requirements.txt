@@ -1,0 +1,19 @@
+# 자율 정찰 드론 — 비전 파트
+#
+# torch 는 CUDA 빌드라 일반 PyPI 가 아닌 공식 인덱스에서 받아야 한다.
+# 아래 두 줄을 먼저 실행할 것:
+#   pip install torch==2.13.0 torchvision==0.28.0 --index-url https://download.pytorch.org/whl/cu130
+#   pip install -r requirements.txt
+#
+# 확인된 환경: Python 3.10.20 / CUDA 13.0
+
+ultralytics==8.4.102
+opencv-python==5.0.0.93
+numpy==2.2.6
+pillow==12.3.0
+matplotlib==3.10.9
+lap==0.5.13          # ByteTrack/BoT-SORT 의 헝가리안 매칭
+
+# ── 시뮬레이터 연동에만 필요 (학습·평가만 하면 없어도 됨) ──
+cosysairsim==3.4.1
+pymavlink==2.4.49

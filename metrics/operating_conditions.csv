@@ -1,0 +1,7 @@
+﻿altitude_m,fov_deg,image_width_px,ground_width_m,gsd_cm_per_px,person_px,vehicle_px,person_detectable,lane_width_m,passes,search_time_min,battery_ok,altitude_safe,e2e_fps_measured,e2e_ok
+15,60,960,17.3,1.8,27.7,249.4,True,13.9,8,4.4,True,True,5.9,True
+15,60,1280,17.3,1.35,37.0,332.6,True,13.9,8,4.4,True,True,5.3,True
+15,90,1280,30.0,2.34,21.3,192.0,True,24.0,5,2.8,True,True,5.3,True
+20,60,960,23.1,2.41,20.8,187.1,True,18.5,6,3.3,True,True,5.9,True
+20,60,1280,23.1,1.8,27.7,249.4,True,18.5,6,3.3,True,True,5.3,True
+25,60,1280,28.9,2.26,22.2,199.5,True,23.1,5,2.8,True,True,5.3,True

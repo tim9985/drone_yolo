@@ -1,0 +1,22 @@
+﻿model,domain,images,mAP50,mAP50_95,precision,recall
+visdrone_baseline,nomad_summer,1198,0.1333,0.0688,0.5615,0.1227
+visdrone_baseline,wisard_sept,289,0.0,0.0,0.0,0.0
+visdrone_baseline,wisard_jan,1282,0.5444,0.3557,0.8369,0.4788
+visdrone_baseline,combined,2769,0.4283,0.2778,0.7989,0.364
+visdrone_baseline,nomad_act::Hiding,719,,,,0.096
+visdrone_baseline,nomad_act::Hiding (Laying),209,,,,0.0478
+visdrone_baseline,nomad_act::Walking,270,,,,0.5037
+nomad30,nomad_summer,1198,0.6435,0.4067,0.7896,0.5885
+nomad30,wisard_sept,289,0.0,0.0,0.0,0.0
+nomad30,wisard_jan,1282,0.2424,0.1617,0.4314,0.2881
+nomad30,combined,2769,0.3287,0.2153,0.6812,0.3075
+nomad30,nomad_act::Hiding,719,,,,0.5563
+nomad30,nomad_act::Hiding (Laying),209,,,,0.6172
+nomad30,nomad_act::Walking,270,,,,0.8889
+all_nomad+wisard,nomad_summer,1198,0.6407,0.3923,0.7701,0.606
+all_nomad+wisard,wisard_sept,289,0.0,0.0,0.0,0.0
+all_nomad+wisard,wisard_jan,1282,0.922,0.6738,0.9333,0.8241
+all_nomad+wisard,combined,2769,0.8503,0.606,0.8649,0.7665
+all_nomad+wisard,nomad_act::Hiding,719,,,,0.548
+all_nomad+wisard,nomad_act::Hiding (Laying),209,,,,0.5311
+all_nomad+wisard,nomad_act::Walking,270,,,,0.8704

@@ -1,0 +1,25 @@
+{
+  "SettingsVersion": 2.0,
+  "SimMode": "ComputerVision",
+  "OriginGeopoint": {
+    "Latitude": 35.1796,
+    "Longitude": 129.0756,
+    "Altitude": 30
+  },
+  "CameraDefaults": {
+    "CaptureSettings": [
+      {
+        "ImageType": 0,
+        "Width": 1280,
+        "Height": 720,
+        "FOV_Degrees": 54.0
+      },
+      {
+        "ImageType": 5,
+        "Width": 1280,
+        "Height": 720,
+        "FOV_Degrees": 54.0
+      }
+    ]
+  }
+}

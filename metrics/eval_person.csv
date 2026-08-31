@@ -1,0 +1,4 @@
+﻿model,mAP50,mAP50_95,precision,recall,recall_act_Hiding,recall_act_Hiding (Laying),recall_act_Walking,recall_가림심함(10-30),recall_가림적음(80-100),recall_중간(40-70)
+visdrone_baseline,0.1333,0.0688,0.5615,0.1227,0.096,0.0478,0.5037,0.0188,0.5859,0.1724
+stage1_nomad10,0.4607,0.2452,0.6952,0.4132,0.299,0.2584,0.7185,0.251,0.8131,0.3487
+stage1_nomad20,0.6349,0.3668,0.7845,0.5534,0.5953,0.5694,0.8963,0.5523,0.9596,0.6418

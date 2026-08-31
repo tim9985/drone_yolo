@@ -1,0 +1,13 @@
+# NOMAD(배우1~30) + WiSARD(9월·1월) 통합
+# val: NOMAD 배우 004·008·014·018 + WiSARD 9월 비행 2개 + 1월 시간분할 뒤 30%
+train:
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad/images/train
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad_a11_20/images/train
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad_a21_30/images/train
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_wisard/images/train
+val:
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad/images/val
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad_a11_20/images/val
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_wisard/images/val
+nc: 1
+names: ['person']
