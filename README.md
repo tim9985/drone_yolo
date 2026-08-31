@@ -77,12 +77,40 @@ pip install -r requirements.txt
 
 ### 방법 B — 원본을 받아 직접 변환한다
 
-원본 NOMAD / WiSARD 를 받은 뒤:
+**원본을 아래 경로에 그대로 풀어 놓아야 한다.** 스크립트가 이 위치를 고정으로 본다.
+
+```
+drone_dev/
+  data/
+    NOMAD/
+      annotations.json            ← 필수. 이게 없으면 라벨을 못 만든다
+      activityLabels.json
+      metadata.json
+      <이미지들>                   ← 하위 폴더에 있어도 된다 (rglob 으로 훑는다)
+    WiSARD/
+      200704_Baker_FLIR_IR_1/     ← 비행(flight) 단위 폴더
+        *.jpg 와 같은 이름의 *.txt
+      200910_Carnation_FLIR_IR_1/
+      ...
+```
+
+WiSARD 는 **폴더 이름이 곧 비행 식별자**다. `wisard_prep.py` 가 이 이름으로
+train/val 을 나누고 촬영 월(9월/1월)을 판별하므로 **폴더명을 바꾸면 안 된다.**
 
 ```bash
-python nomad_prep.py       # NOMAD  원본 → YOLO 학습셋
-python wisard_prep.py      # WiSARD 원본 → YOLO 학습셋
+python nomad_prep.py       # NOMAD  원본 → data/dataset_nomad, dataset_nomad_a11_20
+python wisard_prep.py      # WiSARD 원본 → data/dataset_wisard
 ```
+
+각 스크립트는 `--limit` 로 일부만 먼저 돌려볼 수 있다. 전체는 수십 분 걸린다.
+
+> **주의 — 리샘플링 기준이 예전 값이다.**
+> 두 스크립트는 원본을 그대로 쓰지 않고, **운용 조건에서 사람이 보일 크기**에
+> 맞춰 리샘플링한 뒤 1280×720 으로 크롭한다. 그 기준이 지금
+> **고도 20m · FOV 60° · 1280px (GSD 1.804 cm/px, 사람 약 94px)** 로 박혀 있는데,
+> 실제 운용 조건은 **FOV 54° · 1920px** 로 바뀌었다 (예산안 5.5mm 렌즈 기준).
+> 재계산이 필요하지만 **이번 실험에서는 건드리지 말 것** — 기존 모델과
+> 같은 데이터로 비교해야 imgsz·백본 효과만 분리해서 볼 수 있다.
 
 ### 준비됐는지 확인
 
@@ -147,7 +175,12 @@ python -c "from pathlib import Path; [print(p, len(list((Path('data')/p/'images'
 
 ## 알려진 문제
 
+- **데이터셋 리샘플링 기준이 FOV 60° 시절 값이다.** 운용 조건은 54° 로 바뀌었다.
+  위 "방법 B" 의 주의 참고. 이번 실험에서는 그대로 두는 게 맞다.
 - `run_experiment.py` 가 자체 MAVLink 연결 함수를 써서 `patrol_detect.FLIGHT_PARAMS`
   (경사각 8° 제한) 가 **적용되지 않는다.** 미해결.
 - 자세 분류(정상/쓰러짐 2클래스)는 네 차례 시도 후 F1 0.37~0.47 에서 막혀 중단했다.
   현재는 **1클래스 탐지기**로 쓰러진 사람을 *발견*만 한다.
+- 비행 루프 FPS(3.3~5.9)의 병목은 **YOLO 가 아니라** 언리얼 렌더링과 1080p 이미지
+  RPC 전송이다. YOLO 단독은 같은 4GB 노트북에서 38 FPS 가 나온다.
+  **모델을 키워도 루프 FPS 는 거의 안 떨어진다.**
