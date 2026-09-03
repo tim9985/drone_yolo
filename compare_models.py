@@ -25,7 +25,7 @@ import numpy as np
 from ultralytics import YOLO
 
 BASE_DIR = Path(__file__).resolve().parent
-SAMPLES_DIR = BASE_DIR / "data" / "visdrone_samples"
+SAMPLES_DIR = BASE_DIR / "data" / "raw" / "visdrone_samples"
 COMPARISON_DIR = BASE_DIR / "comparison"
 OUT_CSV = BASE_DIR / "metrics" / "model_comparison.csv"
 IMGSZ = 960

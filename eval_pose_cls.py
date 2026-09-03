@@ -31,7 +31,7 @@ import cv2
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parent
-VAL = BASE_DIR / "data" / "dataset_pose_cls" / "val"
+VAL = BASE_DIR / "data" / "pose_archive" / "cls" / "val"
 DEFAULT_W = BASE_DIR / "weights" / "pose_cls.pt"
 OUT_CSV = BASE_DIR / "metrics" / "pose_cls_eval.csv"
 

@@ -21,7 +21,7 @@ nomad_prep.py — NOMAD 원본 → 운용 조건에 맞춘 YOLO 학습셋 변환
   python nomad_prep.py                        # 기본: a10,a30 사용
   python nomad_prep.py --distances 10,30,50 --per-image 2
   python nomad_prep.py --min-visibility 30    # 가림 심한 표본 제외
-출력: dataset_nomad/{images,labels}/{train,val} + data.yaml + nomad_prep_stats.json
+출력: data/det/nomad_actor01_10/{images,labels}/{train,val} + data.yaml + nomad_prep_stats.json
 """
 import argparse
 import json
@@ -41,8 +41,8 @@ import cv2
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parent
-NOMAD_DIR = BASE_DIR / "data" / "NOMAD"
-OUT_ROOT = BASE_DIR / "data" / "dataset_nomad"
+NOMAD_DIR = BASE_DIR / "data" / "raw" / "NOMAD"
+OUT_ROOT = BASE_DIR / "data" / "det" / "nomad_actor01_10"
 
 CROP_W, CROP_H = 1280, 720
 # 운용 조건(고도 20m, FOV 60°, 1280px, GSD 1.804cm/px)에서 사람 1.7m = 94px

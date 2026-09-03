@@ -94,7 +94,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--npy", help="단일 파일 변환")
     ap.add_argument("--out", help="출력 경로 (단일 변환 시)")
-    ap.add_argument("--dir", default=str(BASE_DIR / "data" / "dataset"), help="일괄 변환 폴더")
+    ap.add_argument("--dir", default=str(BASE_DIR / "data" / "misc" / "depth_samples"), help="일괄 변환 폴더")
     ap.add_argument("--far-clip", type=float, default=FAR_CLIP_M)
     args = ap.parse_args()
 

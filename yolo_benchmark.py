@@ -14,7 +14,7 @@ from ultralytics import YOLO
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--img", default="data/dataset/rgb_0000.png")
+    parser.add_argument("--img", default="data/misc/depth_samples/rgb_0000.png")
     parser.add_argument("--model", default="yolov8n.pt", help="첫 실행 시 자동 다운로드")
     parser.add_argument("--runs", type=int, default=100)
     args = parser.parse_args()

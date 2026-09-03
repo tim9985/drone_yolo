@@ -1,6 +1,6 @@
 # 자세 2클래스 — 0 person(정상) / 1 fallen(쓰러짐)
 # 근거: NOMAD activityLabels.json, 크롭은 100% 단일 인물
-train: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_pose/images/train
-val: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_pose/images/val
+train: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/pose_archive/det2/images/train
+val: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/pose_archive/det2/images/val
 nc: 2
 names: ['person', 'fallen']

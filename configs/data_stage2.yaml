@@ -1,8 +1,8 @@
 # stage2: 실데이터 + 합성 혼합 (합성 3배). val 은 실데이터만
 train: C:/Users/timjj/Desktop/캡스톤/drone_dev/configs/stage2_train_list.txt
 val:
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad/images/val
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad_a11_20/images/val
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_wisard/images/val
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/nomad_actor01_10/images/val
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/nomad_actor11_20/images/val
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/wisard/images/val
 nc: 1
 names: ['person']

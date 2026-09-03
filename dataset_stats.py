@@ -1,7 +1,7 @@
 """
 dataset_stats.py — 합성 데이터셋 통계 보고 (작업 5)
 
-dataset_synth/ 를 읽어 아래를 산출한다:
+data/det/synth/ 를 읽어 아래를 산출한다:
   · 총 이미지 수 / 총 라벨 수 / 이미지당 평균
   · 라벨 박스 크기 분포 (사분위수)
   · 자세별 분포 (서있음 / 쓰러짐 / 부분가림 / 보정표본)
@@ -54,7 +54,7 @@ def imread_u(path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default=str(BASE_DIR / "data" / "dataset_synth"))
+    ap.add_argument("--root", default=str(BASE_DIR / "data" / "det" / "synth"))
     args = ap.parse_args()
     root = Path(args.root)
 

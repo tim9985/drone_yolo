@@ -23,7 +23,7 @@ make_pose_dataset.py — 자세 2클래스 학습셋 생성 (정상 / 쓰러짐)
   이미지는 하드링크로 연결한다(복사 아님). NTFS 에서 추가 용량이 들지 않는다.
   하드링크가 실패하면 복사로 넘어간다.
 
-실행: python make_pose_dataset.py [--out data/dataset_pose]
+실행: python make_pose_dataset.py [--out data/pose_archive/det2]
 출력: dataset_pose/{images,labels}/{train,val} + configs/data_pose.yaml
 """
 import argparse
@@ -42,8 +42,8 @@ if sys.platform == "win32":
         pass
 
 BASE_DIR = Path(__file__).resolve().parent
-SRC_SETS = ("dataset_nomad", "dataset_nomad_a11_20", "dataset_nomad_a21_30")
-ACT_JSON = BASE_DIR / "data" / "NOMAD" / "activityLabels.json"
+SRC_SETS = ("det/nomad_actor01_10", "det/nomad_actor11_20", "det/nomad_actor21_30")
+ACT_JSON = BASE_DIR / "data" / "raw" / "NOMAD" / "activityLabels.json"
 CLASS_NAMES = ["person", "fallen"]      # 0=정상, 1=쓰러짐
 
 
@@ -74,7 +74,7 @@ def link_or_copy(src, dst):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(BASE_DIR / "data" / "dataset_pose"))
+    ap.add_argument("--out", default=str(BASE_DIR / "data" / "pose_archive" / "det2"))
     args = ap.parse_args()
     out = Path(args.out)
 

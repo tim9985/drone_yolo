@@ -27,7 +27,7 @@ make_synth_pose_crops.py — 합성 데이터에서 자세별 크롭 생성
 크롭 규칙은 실사(make_pose_crops.py)와 **동일**하다. 그래야 섞어 학습할 수 있다.
 
 실행: python make_synth_pose_crops.py [--size 128] [--context 1.6]
-출력: data/dataset_pose_cls_synth/train/{person,fallen}/*.jpg
+출력: data/pose_archive/cls_synth/train/{person,fallen}/*.jpg
 """
 import argparse
 import json
@@ -46,9 +46,9 @@ import cv2
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parent
-RAW = BASE_DIR / "data" / "dataset_synth" / "raw"
+RAW = BASE_DIR / "data" / "det" / "synth" / "raw"
 CMAP = BASE_DIR / "configs" / "seg_color_map.json"
-OUT = BASE_DIR / "data" / "dataset_pose_cls_synth"
+OUT = BASE_DIR / "data" / "pose_archive" / "cls_synth"
 
 # place_persons.py 기본값 (dataset_stats.py 와 동일해야 한다)
 N_STANDING, N_OCCLUDED, N_LYING, N_CALIB = 4, 3, 9, 2

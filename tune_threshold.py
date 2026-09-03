@@ -80,7 +80,7 @@ def iou(a, b):
 
 
 def activity_lookup():
-    p = BASE_DIR / "data" / "NOMAD" / "activityLabels.json"
+    p = BASE_DIR / "data" / "raw" / "NOMAD" / "activityLabels.json"
     if not p.exists():
         return lambda *_: "unknown"
     tbl = {int(r["id"]): r["labels"] for r in json.load(open(p, encoding="utf-8"))}
@@ -164,9 +164,9 @@ def main():
         raise SystemExit(f"가중치 없음: {weights}")
 
     nomad = []
-    for d in ("dataset_nomad", "dataset_nomad_a11_20"):
+    for d in ("det/nomad_actor01_10", "det/nomad_actor11_20"):
         nomad.extend(sorted((BASE_DIR / "data" / d / "images" / "val").glob("*.jpg")))
-    wis = sorted((BASE_DIR / "data" / "dataset_wisard" / "images" / "val").glob("*.jpg"))
+    wis = sorted((BASE_DIR / "data" / "det" / "wisard" / "images" / "val").glob("*.jpg"))
     jan = [p for p in wis if p.name.startswith("DJI_0582")]
     bg = [p for p in wis if not p.name.startswith("DJI_0582")]
 

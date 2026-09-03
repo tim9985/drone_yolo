@@ -37,9 +37,9 @@ TMP_DIR = BASE_DIR / "metrics" / "_lists"
 OUT_CSV = BASE_DIR / "metrics" / "eval_domain.csv"
 IMGSZ = 960
 
-NOMAD_VAL = [BASE_DIR / "data" / "dataset_nomad" / "images" / "val",
-             BASE_DIR / "data" / "dataset_nomad_a11_20" / "images" / "val"]
-WISARD_VAL = BASE_DIR / "data" / "dataset_wisard" / "images" / "val"
+NOMAD_VAL = [BASE_DIR / "data" / "det" / "nomad_actor01_10" / "images" / "val",
+             BASE_DIR / "data" / "det" / "nomad_actor11_20" / "images" / "val"]
+WISARD_VAL = BASE_DIR / "data" / "det" / "wisard" / "images" / "val"
 # 1월(겨울) 비행은 DJI_0582 (1-10-2022 ...). 나머지(DJI_0403/0409)는 9월.
 JAN_PREFIX = "DJI_0582"
 
@@ -113,7 +113,7 @@ def iou(a, b):
 
 def activity_lookup():
     import json
-    p = BASE_DIR / "data" / "NOMAD" / "activityLabels.json"
+    p = BASE_DIR / "data" / "raw" / "NOMAD" / "activityLabels.json"
     if not p.exists():
         return None
     tbl = {int(r["id"]): r["labels"] for r in json.load(open(p, encoding="utf-8"))}

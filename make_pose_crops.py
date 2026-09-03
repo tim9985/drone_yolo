@@ -20,7 +20,7 @@ make_pose_crops.py — 자세 분류기용 크롭 데이터셋 생성
     상자에 딱 맞추면 배경 문맥이 사라진다.
 
 출력 (ultralytics 분류 규약)
-  dataset_pose_cls/{train,val}/{person,fallen}/*.jpg
+  data/pose_archive/cls/{train,val}/{person,fallen}/*.jpg
 
 실행: python make_pose_crops.py [--size 128] [--context 1.6]
 """
@@ -40,8 +40,8 @@ import cv2
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parent
-SRC = BASE_DIR / "data" / "dataset_pose"
-OUT = BASE_DIR / "data" / "dataset_pose_cls"
+SRC = BASE_DIR / "data" / "pose_archive" / "det2"
+OUT = BASE_DIR / "data" / "pose_archive" / "cls"
 CLASS_NAMES = {0: "person", 1: "fallen"}
 
 

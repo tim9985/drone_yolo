@@ -45,13 +45,13 @@ BOX_COLOR = (60, 220, 90)         # 정답 상자 (BGR 아님 — PIL RGB)
 # 행 정의: (제목, 부제, 이미지 폴더, 파일 필터)
 ROWS = [
     ("NOMAD", "여름 · 미국 농장 · 배우 30명\n활동 라벨(보행·은폐·쓰러짐) 보유",
-     "data/dataset_nomad/images/train", None),
+     "data/det/nomad_actor01_10/images/train", None),
     ("WiSARD 9월", "가을 · 산지\n프로젝트 시기와 근접",
-     "data/dataset_wisard/images/train", lambda p: not p.name.startswith("DJI_0582")),
+     "data/det/wisard/images/train", lambda p: not p.name.startswith("DJI_0582")),
     ("WiSARD 1월", "겨울 · 설경\n최종 시현 환경에 가장 가까움",
-     "data/dataset_wisard/images/train", lambda p: p.name.startswith("DJI_0582")),
+     "data/det/wisard/images/train", lambda p: p.name.startswith("DJI_0582")),
     ("합성 (AirSim)", "쓰러진 자세 · 잔해 가림\n수작업 라벨링 0장 — 자동 생성",
-     "data/dataset_synth/yolo/images/train", None),
+     "data/det/synth/yolo/images/train", None),
 ]
 
 

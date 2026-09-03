@@ -104,6 +104,11 @@ CAMERA_PITCH_DEG = -90.0
 # **좌표 신고에서 뺀다.** 대상은 어차피 안정 구간에서 다시 관측된다.
 MAX_TILT_DEG = 6.0     # |roll|,|pitch| 합성 기울기 상한
 MAX_SLEW_DEG = 1.5     # 촬영 전후 자세 변화 상한
+
+# 각 waypoint 도착 후 제자리 관측 시간(초).
+# 기준서 3-3 "이동 → 감속 → 호버 2~4초 관측" 을 구현한 값이다.
+# 이동 중에는 가속·감속으로 계속 기울어 좌표 신고가 자세 게이트에 걸린다.
+HOVER_OBSERVE_SEC = 4.0
 USE_DEPTH        = True   # depth 기반 실좌표 추정 사용 (False면 기존처럼 드론 위치에 기록)
 
 # ── 디버그 오버레이 (작업 4) ──────────────────────────────────────────
@@ -120,29 +125,80 @@ def connect_mavlink():
     return drone
 
 
-def set_flight_params(drone, params=None):
+def _param_name(msg):
+    """PARAM_VALUE 의 param_id 를 문자열로. bytes 로 오기도 하고 널 패딩이 붙는다."""
+    pid = msg.param_id
+    if isinstance(pid, bytes):
+        pid = pid.decode("ascii", "ignore")
+    return pid.split(chr(0))[0].strip()
+
+
+def set_flight_params(drone, params=None, retries=3):
     """경사각·속도·가속 제한을 걸어 촬영에 적합한 비행으로 만든다.
 
-    파라미터가 실제로 반영됐는지 되읽어 확인한다. 이름이 틀리면 ArduPilot 은
-    조용히 무시하므로, 확인하지 않으면 안 걸린 채로 비행하게 된다."""
+    반영 확인이 까다롭다. ArduPilot 은 우리가 요청하지 않은 파라미터의
+    PARAM_VALUE 도 계속 흘려보내기 때문에, 다음에 오는 PARAM_VALUE 를 그냥
+    받아 비교하면 **엉뚱한 파라미터와 비교하게 된다.** 실제로 그 버그 때문에
+    전부 "반영 안 됨" 으로 잘못 보고된 적이 있다. 이름이 맞는 응답만 골라야 한다.
+
+    이름이 틀린 파라미터는 ArduPilot 이 조용히 무시한다(응답 자체가 없다).
+    확인하지 않으면 제한이 안 걸린 채로 비행하게 된다."""
     params = params or FLIGHT_PARAMS
-    for name, val in params.items():
-        drone.mav.param_set_send(drone.target_system, drone.target_component,
-                                 name.encode(), float(val),
-                                 mavutil.mavlink.MAV_PARAM_TYPE_REAL32)
-    time.sleep(1.0)
-    ok, bad = [], []
-    for name, val in params.items():
-        drone.mav.param_request_read_send(drone.target_system, drone.target_component,
-                                          name.encode(), -1)
-        m = drone.recv_match(type="PARAM_VALUE", blocking=True, timeout=2)
-        if m and abs(m.param_value - val) < 1e-3:
-            ok.append(f"{name}={val:g}")
-        else:
-            bad.append(name)
-    print(f"[비행설정] 적용 {', '.join(ok)}")
-    if bad:
-        print(f"[비행설정] 반영 안 됨: {', '.join(bad)} — 기울기가 커져 좌표 정확도가 떨어질 수 있음")
+    todo = dict(params)
+    ok = {}
+
+    # 이륙까지 오는 동안 소켓에 텔레메트리가 잔뜩 쌓여 있다. 그대로 두면 우리가
+    # 보낸 요청의 응답이 그 백로그 뒤에 묻혀, 짧은 대기 시간 안에 도달하지 못한다.
+    # (증상: SYSID_THISMAV 같은 확실히 존재하는 파라미터조차 "응답 없음")
+    drained = 0
+    while drone.recv_match(blocking=False) is not None:
+        drained += 1
+        if drained > 20000:      # 스트림이 계속 들어오면 무한정 돌 수 있다
+            break
+    if drained:
+        print(f"[비행설정] 밀린 메시지 {drained}건 비움")
+
+    seen = []          # 진단용: 실제로 도착한 PARAM_VALUE 이름들
+    for _ in range(retries):
+        if not todo:
+            break
+        for name, val in todo.items():
+            drone.mav.param_set_send(drone.target_system, drone.target_component,
+                                     name.encode(), float(val),
+                                     mavutil.mavlink.MAV_PARAM_TYPE_REAL32)
+            drone.mav.param_request_read_send(
+                drone.target_system, drone.target_component, name.encode(), -1)
+        # 설정에 대한 확인 응답을 이름으로 맞춰 가며 수집한다
+        deadline = time.time() + 3.0
+        while todo and time.time() < deadline:
+            m = drone.recv_match(type="PARAM_VALUE", blocking=True, timeout=1)
+            if m is None:
+                continue
+            name = _param_name(m)
+            seen.append(f"{name}={m.param_value:g}")
+            if name in todo and abs(m.param_value - todo[name]) < 1e-3:
+                ok[name] = m.param_value
+                del todo[name]
+
+    if ok:
+        print(f"[비행설정] 적용 {', '.join(f'{k}={v:g}' for k, v in ok.items())}")
+    if todo:
+        print(f"[비행설정] 반영 안 됨: {', '.join(todo)} — 없는 파라미터이거나 거부됨. "
+              f"기울기가 커져 좌표 정확도가 떨어진다")
+        print(f"[비행설정] 진단: target={drone.target_system}/{drone.target_component} · "
+              f"수신한 PARAM_VALUE {len(seen)}건" + (f" → {seen[:8]}" if seen else " (한 건도 안 옴)"))
+        # 대조군: 반드시 존재하는 파라미터를 같은 방식으로 읽어 본다.
+        # 이것도 실패하면 이름 문제가 아니라 요청 경로 자체가 막힌 것이다.
+        # 전체 목록을 요청해 본다. 이것도 무응답이면 개별 파라미터 이름 문제가
+        # 아니라 **파라미터 요청 경로 자체가 죽은 것**이다.
+        drone.mav.param_request_list_send(drone.target_system, drone.target_component)
+        got, end = [], time.time() + 5.0
+        while time.time() < end and len(got) < 5:
+            m = drone.recv_match(type="PARAM_VALUE", blocking=True, timeout=1)
+            if m is not None:
+                got.append(_param_name(m))
+        print(f"[비행설정] 대조군(전체 목록 요청): {len(got)}건 수신"
+              + (f" → {got}" if got else " — 요청 경로 자체가 응답하지 않는다"))
 
 
 def send_waypoint(drone, x, y, z, speed=SPEED):
@@ -506,7 +562,18 @@ def run_patrol(drone, ac_client=None):
         ok, dist = wait_arrival(drone, x, y, z, threshold=2.0)
         mark = "도달 ✓" if ok else f"미도달 ✗ (남은 거리 {dist:.1f}m)"
         print(f"[비행] waypoint {i} {mark}  | 탐지 FPS: {det.fps:.1f}")
-        time.sleep(0.5)
+
+        # ── 호버 관측 ──
+        # 짐벌이 없어 기체가 기울면 카메라도 기운다. 이동 중에는 가속·감속 때문에
+        # 계속 기울어 좌표를 신고할 수 없다(자세 게이트에서 걸린다).
+        # 기준서 3-3 이 규정한 "이동 → 감속 → 호버 2~4초 관측" 패턴이 이것이다.
+        # 도착 후 제자리에서 자세가 가라앉기를 기다렸다가 관측한다.
+        t_hover = time.time()
+        while time.time() - t_hover < HOVER_OBSERVE_SEC:
+            send_waypoint(drone, x, y, z)      # setpoint 를 계속 보내야 GUIDED 가 유지된다
+            time.sleep(0.25)
+        print(f"[비행] waypoint {i} 호버 관측 {HOVER_OBSERVE_SEC:.0f}초 "
+              f"| 기울기 {det.tilt_deg:.1f}° · 자세 {'안정' if det.pose_stable else '불안정'}")
 
     # 복귀
     print("\n[비행] 사각형 완료. 복귀(RTL)...")

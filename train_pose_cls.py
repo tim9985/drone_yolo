@@ -35,7 +35,7 @@ if sys.platform == "win32":
         pass
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA = BASE_DIR / "data" / "dataset_pose_cls"
+DATA = BASE_DIR / "data" / "pose_archive" / "cls"
 RUNS = BASE_DIR / "runs_person"
 
 

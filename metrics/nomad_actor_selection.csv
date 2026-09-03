@@ -1,0 +1,43 @@
+﻿actor,age,age_band,gender,race,upper_color,rescue_frames,total_frames,rescue_pct
+Actor001,61,60대+,Female,White/Caucasian,gray,2066,6128,33.7
+Actor003,67,60대+,Male,White/Caucasian,cyan,1077,6242,17.3
+Actor004,41,40대,Male,White/Caucasian,blue,935,6908,13.5
+Actor005,59,50대,Female,White/Caucasian,black,1017,6618,15.4
+Actor006,40,40대,Male,White/Caucasian,light gray,920,5388,17.1
+Actor007,40,40대,Female,White/Caucasian,light gray,2052,6833,30.0
+Actor008,31,30대,Female,White/Caucasian,blue,1410,6790,20.8
+Actor010,30,30대,Female,Latino/Hispanic,pink,265,3499,7.6
+Actor012,25,20대이하,Male,South Asian,dark gray,958,4873,19.7
+Actor020,31,30대,Female,Latino/Hispanic,yellow,684,4738,14.4
+Actor026,22,20대이하,Female,South Asian,white,984,3958,24.9
+Actor030,27,20대이하,Male,Asian,green,1552,5328,29.1
+Actor035,30,30대,Male,South Asian,cyan,1185,4171,28.4
+Actor039,39,30대,Female,South Asian,blue,768,2997,25.6
+Actor040,36,30대,Female,White/Caucasian,white,1074,5096,21.1
+Actor042,49,40대,Male,White/Caucasian,black,900,3317,27.1
+Actor043,49,40대,Male,Pacific Islander,cyan,1839,4477,41.1
+Actor044,26,20대이하,Male,Asian,gray,357,2087,17.1
+Actor048,28,20대이하,Female,Asian,white,809,3521,23.0
+Actor051,28,20대이하,Female,South Asian,green,709,4607,15.4
+Actor053,54,50대,Male,Latino/Hispanic,blue,585,3418,17.1
+Actor057,58,50대,Male,White/Caucasian,blue,821,5217,15.7
+Actor059,38,30대,Male,Asian,dark gray,648,2918,22.2
+Actor065,22,20대이하,Male,Asian,black,1830,6570,27.9
+Actor068,44,40대,Female,White/Caucasian,purple,1153,4900,23.5
+Actor070,75,60대+,Female,White/Caucasian,purple,2639,9463,27.9
+Actor071,75,60대+,Male,White/Caucasian,dark gray,2114,9534,22.2
+Actor073,68,60대+,Male,Asian,gray,1425,6238,22.8
+Actor076,69,60대+,Male,White/Caucasian,gray,1130,5482,20.6
+Actor077,66,60대+,Female,White/Caucasian,green,1760,6377,27.6
+Actor078,27,20대이하,Male,South Asian,purple,1249,5287,23.6
+Actor079,31,30대,Female,Latino/Hispanic,black,1255,6256,20.1
+Actor084,25,20대이하,Female,African Descent,black,1256,7274,17.3
+Actor087,55,50대,Male,White/Caucasian,blue,1036,6418,16.1
+Actor088,58,50대,Female,White/Caucasian,purple,1614,7278,22.2
+Actor090,46,40대,Male,White/Caucasian,blue,1876,7510,25.0
+Actor092,78,60대+,Female,White/Caucasian,green,2841,7793,36.5
+Actor093,51,50대,Female,White/Caucasian,black,1282,5503,23.3
+Actor094,53,50대,Female,White/Caucasian,blue,1533,6967,22.0
+Actor095,52,50대,Female,African Descent,red,2040,8053,25.3
+Actor097,45,40대,Male,Latino/Hispanic,dark gray,530,2760,19.2
+Actor100,64,60대+,Female,White/Caucasian,white,1166,5355,21.8

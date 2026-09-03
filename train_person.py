@@ -31,8 +31,8 @@ if sys.platform == "win32":
         pass
 
 BASE_DIR = Path(__file__).resolve().parent
-NOMAD_YAML = BASE_DIR / "data" / "dataset_nomad" / "data.yaml"
-SYNTH_IMG = BASE_DIR / "data" / "dataset_synth" / "yolo" / "images" / "train"
+NOMAD_YAML = BASE_DIR / "data" / "det" / "nomad_actor01_10" / "data.yaml"
+SYNTH_IMG = BASE_DIR / "data" / "det" / "synth" / "yolo" / "images" / "train"
 MIXED_YAML = BASE_DIR / "configs" / "data_stage2.yaml"
 BASE_WEIGHTS = BASE_DIR / "weights" / "yolov8s_visdrone.pt"
 RUNS = BASE_DIR / "runs_person"
@@ -61,11 +61,11 @@ def write_mixed_yaml(repeat=3):
     """
     D = BASE_DIR / "data"
     real_train = [D / n / "images" / "train" for n in
-                  ("dataset_nomad", "dataset_nomad_a11_20", "dataset_nomad_a21_30")]
-    real_train.append(D / "dataset_wisard" / "images" / "train")
-    real_val = [D / "dataset_nomad" / "images" / "val",
-                D / "dataset_nomad_a11_20" / "images" / "val",
-                D / "dataset_wisard" / "images" / "val"]
+                  ("det/nomad_actor01_10", "det/nomad_actor11_20", "det/nomad_actor21_30")]
+    real_train.append(D / "det" / "wisard" / "images" / "train")
+    real_val = [D / "det" / "nomad_actor01_10" / "images" / "val",
+                D / "det" / "nomad_actor11_20" / "images" / "val",
+                D / "det" / "wisard" / "images" / "val"]
 
     if repeat <= 1:
         train_block = "train:\n" + "".join(

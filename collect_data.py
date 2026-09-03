@@ -15,7 +15,7 @@ import numpy as np
 import cosysairsim as airsim
 from cosysairsim.utils import euler_to_quaternion
 
-OUT_DIR = "data/dataset"
+OUT_DIR = "data/misc/depth_samples"
 
 
 def capture(client: airsim.MultirotorClient, idx: int) -> None:
@@ -76,7 +76,7 @@ def run_collect(loop: int = 1, interval: float = 2.0) -> None:
 # ═══════════════════════════════════════════════════════════════════════
 # 합성 데이터 수집 (--synth) — ComputerVision 모드 전용
 # ═══════════════════════════════════════════════════════════════════════
-SYNTH_DIR = "data/dataset_synth/raw"
+SYNTH_DIR = "data/det/synth/raw"
 SYNTH_ALTITUDES = (15.0, 20.0, 25.0, 30.0)   # m (지면 기준 상대 고도)
 SYNTH_CAM_PITCHES = (-90.0, -45.0)           # 수직 하방 / 45도
 NEGATIVE_RATIO = 0.15                        # 사람이 없는 배경 프레임 비율

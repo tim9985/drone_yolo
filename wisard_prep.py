@@ -18,7 +18,7 @@ NOMAD 대비 차이
   python wisard_prep.py                          # 기본: VIS 전체
   python wisard_prep.py --months 09,01           # 특정 월만
   python wisard_prep.py --per-image 1 --negatives 0.1
-출력: dataset_wisard/{images,labels}/{train,val} + data.yaml + wisard_prep_stats.json
+출력: data/det/wisard/{images,labels}/{train,val} + data.yaml + wisard_prep_stats.json
 """
 import argparse
 import json
@@ -40,8 +40,8 @@ import cv2
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parent
-WISARD_DIR = BASE_DIR / "data" / "WiSARD"
-OUT_ROOT = BASE_DIR / "data" / "dataset_wisard"
+WISARD_DIR = BASE_DIR / "data" / "raw" / "WiSARD"
+OUT_ROOT = BASE_DIR / "data" / "det" / "wisard"
 
 CROP_W, CROP_H = 1280, 720
 TARGET_PERSON_PX = 94          # 운용 조건(고도 20m, FOV 60°, 1280px)에서 사람 1.7m

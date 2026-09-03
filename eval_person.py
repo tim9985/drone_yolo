@@ -34,10 +34,10 @@ BASE_DIR = Path(__file__).resolve().parent
 # 공정 비교: 두 모델 모두 학습에 쓰지 않은 배우(004·008·014·018) 1198장을 공통 검증셋으로 쓴다.
 # (10명 모델은 011~020 을 아예 본 적이 없고, 20명 모델은 이들을 val 로 뒀다)
 NOMAD_YAML = BASE_DIR / "configs" / "data_nomad20.yaml"
-NOMAD_VAL_DIRS = [BASE_DIR / "data" / "dataset_nomad" / "images" / "val",
-                  BASE_DIR / "data" / "dataset_nomad_a11_20" / "images" / "val"]
-SYNTH_VAL_IMG = BASE_DIR / "data" / "dataset_synth" / "yolo" / "images" / "val"
-ANN_JSON = BASE_DIR / "data" / "NOMAD" / "annotations.json"
+NOMAD_VAL_DIRS = [BASE_DIR / "data" / "det" / "nomad_actor01_10" / "images" / "val",
+                  BASE_DIR / "data" / "det" / "nomad_actor11_20" / "images" / "val"]
+SYNTH_VAL_IMG = BASE_DIR / "data" / "det" / "synth" / "yolo" / "images" / "val"
+ANN_JSON = BASE_DIR / "data" / "raw" / "NOMAD" / "annotations.json"
 OUT_CSV = BASE_DIR / "metrics" / "eval_person.csv"
 
 CANDIDATES = [
@@ -81,7 +81,7 @@ def iou(a, b):
 def activity_index():
     """activityLabels.json → (actor, distance, frame) 로 활동명을 조회하는 함수 반환.
     Walking / Hiding / Laying / Hiding (Laying) 구간이 프레임 범위로 들어있다."""
-    p = BASE_DIR / "data" / "NOMAD" / "activityLabels.json"
+    p = BASE_DIR / "data" / "raw" / "NOMAD" / "activityLabels.json"
     if not p.exists():
         return lambda a, d, f: "unknown"
     tbl = {int(r["id"]): r["labels"] for r in json.load(open(p, encoding="utf-8"))}

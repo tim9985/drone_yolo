@@ -1,14 +1,14 @@
 """
 auto_label.py — seg ground-truth 에서 YOLO 라벨 자동 생성 (작업 3)
 
-입력: dataset_synth/raw/  (rgb_XXXX.png + seg_XXXX.png, collect_data.py --synth 산출물)
+입력: data/det/synth/raw/  (rgb_XXXX.png + seg_XXXX.png, collect_data.py --synth 산출물)
       seg_color_map.json  (set_segmentation_ids.py 가 생성한 인스턴스별 RGB 색상)
 처리: 인스턴스별 색상 마스크 → 모폴로지 정리 → connectedComponents → 외접 사각형 → YOLO txt
       인스턴스마다 색이 달라 개체가 겹쳐도 분리 라벨링됨
-출력: dataset_synth/yolo/{images,labels}/{train,val} + data.yaml
-      dataset_synth/qc/qc_XXXX.png  (라벨 시각화 검수 이미지)
+출력: data/det/synth/yolo/{images,labels}/{train,val} + data.yaml
+      data/det/synth/qc/qc_XXXX.png  (라벨 시각화 검수 이미지)
 
-실행: python auto_label.py [--raw dataset_synth/raw] [--min-area 50] [--qc 10]
+실행: python auto_label.py [--raw data/det/synth/raw] [--min-area 50] [--qc 10]
 """
 import argparse
 import json
@@ -106,7 +106,7 @@ def to_yolo_line(cls_id, x, y, w, h, img_w, img_h):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--raw", default=str(BASE_DIR / "data" / "dataset_synth" / "raw"))
+    parser.add_argument("--raw", default=str(BASE_DIR / "data" / "det" / "synth" / "raw"))
     parser.add_argument("--min-area", type=int, default=100, help="최소 픽셀 면적(노이즈 제외)")
     parser.add_argument("--min-side", type=int, default=10, help="박스 최소 변 길이(px)")
     parser.add_argument("--qc", type=int, default=10, help="검수 이미지 수")

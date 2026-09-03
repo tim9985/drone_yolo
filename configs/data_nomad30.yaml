@@ -1,11 +1,11 @@
-# NOMAD 배우 1~30. 검증셋은 10/20명 실험과 동일하게 고정(004·008·014·018)해
-# 세 모델을 같은 잣대로 비교할 수 있게 한다.
+# NOMAD 배우 1~30. 검증셋은 10/20명 실험과 동일하게 고정
+# 이 파일은 make_configs.py 가 생성한다. 직접 고치지 말 것.
 train:
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad/images/train
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad_a11_20/images/train
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad_a21_30/images/train
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/nomad_actor01_10/images/train
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/nomad_actor11_20/images/train
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/nomad_actor21_30/images/train
 val:
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad/images/val
-  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/dataset_nomad_a11_20/images/val
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/nomad_actor01_10/images/val
+  - C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/nomad_actor11_20/images/val
 nc: 1
 names: ['person']
