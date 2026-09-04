@@ -117,6 +117,13 @@ def main():
     ap.add_argument("--data", default=None,
                     help="data.yaml 직접 지정 (예: data_nomad20.yaml — 배우 20명 재학습)")
     ap.add_argument("--name", default=None, help="결과 폴더명 직접 지정")
+    # 파인튜닝에서 학습률은 결정적이다. 기본 0.01 은 처음부터 학습할 때의 값이라
+    # 사전학습 특징을 초기 몇 에폭 만에 망가뜨린다(파국적 망각).
+    # 자세 2클래스 시도(pose2)가 그래서 실패했다 — 박스 손실이 1.2 → 1.9 로 악화.
+    ap.add_argument("--lr0", type=float, default=None,
+                    help="시작 학습률. 잘 되는 모델을 이어받을 때는 0.001 이하를 쓴다")
+    ap.add_argument("--freeze", type=int, default=None,
+                    help="앞쪽 N개 층을 고정한다. 특징 추출부를 보존하고 헤드만 학습시킬 때")
     ap.add_argument("--shutdown", type=int, default=0, metavar="SEC",
                     help="학습 정상 완료 후 지정 초 뒤 컴퓨터 종료 (예: --shutdown 120). "
                          "취소는 다른 터미널에서 'shutdown /a'")
@@ -177,6 +184,13 @@ def main():
     print(f"  시작 가중치 : {weights}")
     print(f"  데이터      : {data}")
     print(f"  imgsz {args.imgsz} / epochs {epochs} / batch {args.batch} / patience {args.patience}")
+
+    if args.lr0 is not None:
+        extra["lr0"] = args.lr0
+        print(f"  학습률     : lr0 {args.lr0} (기본 0.01 대신 — 사전학습 보존)")
+    if args.freeze is not None:
+        extra["freeze"] = args.freeze
+        print(f"  고정        : 앞 {args.freeze}개 층")
 
     model = YOLO(str(weights))
     model.train(

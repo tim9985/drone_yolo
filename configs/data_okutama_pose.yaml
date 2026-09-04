@@ -1,0 +1,8 @@
+# Okutama-Action 4K → 자세 2클래스 (사람 200px = 실기체 고도 16m 수준)
+# 지금까지 자세 분류는 전부 97px 로만 시도해 다섯 번 실패했다. 이 데이터는
+# 처음으로 실기체가 실제로 보는 해상도에서 학습해 보는 것이다.
+# 검증셋은 2.2.10 · 1.1.9 (영상 단위 분할). 2.2.10 이 fallen 341개를 갖는다.
+train: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/okutama_pose/images/train
+val: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/okutama_pose/images/val
+nc: 2
+names: ['person', 'fallen']

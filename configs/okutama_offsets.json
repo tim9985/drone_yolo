@@ -1,0 +1,72 @@
+{
+  "1.1.8": {
+    "offset": 0,
+    "score": 0.33,
+    "score_at_zero": 0.33,
+    "video_frames": 1520,
+    "label_max_frame": 1319
+  },
+  "1.1.9": {
+    "offset": 0,
+    "score": 0.429,
+    "score_at_zero": 0.429,
+    "video_frames": 2640,
+    "label_max_frame": 2629
+  },
+  "1.2.1": {
+    "offset": 0,
+    "score": 0.49,
+    "score_at_zero": 0.488,
+    "video_frames": 1442,
+    "label_max_frame": 1441
+  },
+  "1.2.10": {
+    "offset": 21,
+    "score": 0.59,
+    "score_at_zero": 0.255,
+    "video_frames": 1671,
+    "label_max_frame": 1690
+  },
+  "1.2.3": {
+    "offset": 2,
+    "score": 0.528,
+    "score_at_zero": 0.431,
+    "video_frames": 836,
+    "label_max_frame": 836
+  },
+  "2.1.8": {
+    "offset": 14,
+    "score": 0.36,
+    "score_at_zero": 0.003,
+    "video_frames": 2214,
+    "label_max_frame": 2226
+  },
+  "2.1.9": {
+    "offset": 0,
+    "score": 0.468,
+    "score_at_zero": 0.468,
+    "video_frames": 1814,
+    "label_max_frame": 1813
+  },
+  "2.2.1": {
+    "offset": 21,
+    "score": 0.333,
+    "score_at_zero": 0.096,
+    "video_frames": 1377,
+    "label_max_frame": 1079
+  },
+  "2.2.10": {
+    "offset": 18,
+    "score": 0.583,
+    "score_at_zero": 0.274,
+    "video_frames": 1817,
+    "label_max_frame": 1834
+  },
+  "2.2.3": {
+    "offset": 0,
+    "score": 0.33,
+    "score_at_zero": 0.33,
+    "video_frames": 1922,
+    "label_max_frame": 1921
+  }
+}
