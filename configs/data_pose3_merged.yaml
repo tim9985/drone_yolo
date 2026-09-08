@@ -1,0 +1,7 @@
+# 자세 3클래스 통합 — 0 person / 1 fallen / 2 ambiguous
+# WiSARD 배정: ambiguous · NOMAD 전환 폭: ±15프레임
+# SARD 자세 라벨은 원본 고유 (Sambolek & Ivasic-Kos 2021)
+train: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/pose3_merged/images/train
+val: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/pose3_merged/images/val
+nc: 3
+names: ['person', 'fallen', 'ambiguous']

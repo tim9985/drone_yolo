@@ -1,0 +1,7 @@
+# Okutama 자세 3클래스 — 0 person / 1 fallen / 2 ambiguous
+# 원본 4K 를 1920x1080 으로 축소만 했다 (자르지도 확대하지도 않음).
+# 사람 크기가 우리 운용 조건(54deg/1080p/16m, 선자세 59px)과 일치한다.
+train: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/okutama3/images/train
+val: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/det/okutama3/images/val
+nc: 3
+names: ['person', 'fallen', 'ambiguous']

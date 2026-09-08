@@ -1,0 +1,12 @@
+# SARD-2 (Roboflow) — 자세 6클래스 · 1920x1080 (실기체와 동일 해상도)
+# 출처: nikolasgegenava/sard-2-search-and-rescue-dataset-extra-classes (CC BY 4.0)
+# 원 데이터: Sambolek & Ivasic-Kos, SARD (DOI 10.21227/ahxm-k331)
+#
+# 지금까지 자세 분류를 6번 시도해 모두 실패했다. 그 데이터는 전부
+# 쓰러짐 표본이 5~12% 였고 해상도도 1280x720 이었다.
+# 여기는 laying_down 이 24.7%(1,569개)이고 해상도가 실기체와 같다.
+train: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/raw/sard2/search-and-rescue-2/train/images
+val: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/raw/sard2/search-and-rescue-2/valid/images
+test: C:/Users/timjj/Desktop/캡스톤/drone_dev/data/raw/sard2/search-and-rescue-2/test/images
+nc: 6
+names: ['Running', 'Walking', 'laying_down', 'not_defined', 'seated', 'stands']

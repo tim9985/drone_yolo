@@ -148,7 +148,8 @@ def find_videos(strict=True):
     lab_dir = SRC / "Labels" / "MultiActionLabels" / "3840x2160"
     offsets = load_offsets()
     out, dropped = [], []
-    for mp4 in sorted(SRC.glob("Drone*/*/*.mp4")):
+    # rglob — 영상 40편 중 30편이 TrainSetVideos (2)/ 하위에 있다.
+    for mp4 in sorted(SRC.rglob("*.mp4")):
         vid = mp4.stem
         lab = lab_dir / f"{vid}.txt"
         if not lab.exists():
@@ -202,7 +203,7 @@ def main():
     out_root = Path(args.out)
     vids = find_videos(strict=not args.no_strict)
     if not vids:
-        raise SystemExit(f"영상을 찾지 못했습니다: {SRC}/Drone*/*/*.mp4")
+        raise SystemExit(f"영상을 찾지 못했습니다: {SRC}/**/*.mp4")
     print(f"영상 {len(vids)}개 · 목표 사람 크기 {args.target_px}px · {args.stride}프레임마다\n")
 
     for split in ("train", "val"):

@@ -104,7 +104,9 @@ def main():
     results = {}
 
     for vid in args.videos:
-        mp4 = next(SRC.glob(f"Drone*/*/{vid}.mp4"), None)
+        # rglob 이어야 한다. TrainSetVideos (2)/Drone1/... 처럼 한 단계 더
+        # 들어간 곳에 30편이 더 있는데, Drone*/*/ 패턴은 그걸 놓친다.
+        mp4 = next(SRC.rglob(f"{vid}.mp4"), None)
         if mp4 is None or not (LAB_DIR / f"{vid}.txt").exists():
             print(f"{vid}: 파일 없음 — 건너뜀")
             continue

@@ -29,3 +29,12 @@ figures/
 
 # ── 로컬 전용 ──
 *.lnk
+
+# ── 인스턴스 은행·검수판·영상 결과 ────────────────────
+# NOMAD/Okutama 원본에서 오려낸 사람 이미지가 들어 있다.
+# 원본이 연구용 라이선스이므로 파생물도 재배포하지 않는다.
+runs_instances/
+runs_review/
+runs_video/
+metrics/_lists/
+mobile_sam.pt
