@@ -61,10 +61,43 @@ conda create -n drone python=3.10 -y && conda activate drone
 # CUDA 빌드 확인 필수 — CPU 빌드가 설치되기 쉽다
 pip install torch --index-url https://download.pytorch.org/whl/cu121
 pip install ultralytics opencv-python pyyaml
-python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+python -c "import torch; print(torch.__version__, torch.cuda.is_available(),
+                              torch.cuda.get_device_name(0))"
 ```
 
 `torch.cuda.is_available()` 가 False 면 CPU 빌드다. 지우고 인덱스 지정해 다시 깔 것.
+
+### 노트북 설정을 그대로 쓰지 말 것
+
+기존 값은 **RTX 3050 4GB** 기준이라 3090 에서는 크게 낭비된다.
+
+| 인자 | 노트북 | 서버(3090 24GB · i9-11900 · 64GB) |
+|---|---|---|
+| `--batch` | 6 | **16~32** (imgsz 960) · **8~16** (imgsz 1280) |
+| `workers` | 4 | **8** (8코어 16스레드) |
+| `cache` | False | `'disk'` 권장. `'ram'` 은 9,008장 디코딩에 ~24GB 필요 |
+
+**단, 실험 A 는 batch 6 · lr0 0.001 을 그대로 쓴다.** 8차와 비교하는 게 목적이라
+회전 인자 외의 변수를 바꾸면 원인을 못 가린다. 3090 이면 batch 6 으로도
+에폭당 5.6분 → 2분 안쪽으로 줄어든다. batch 를 키울 거면 **별도 실행**으로 분리할 것.
+
+batch 를 올릴 때는 학습률도 함께 봐야 한다. 우리가 `lr0 0.001` 을 쓰는 이유는
+**사전학습 특징 보존**이라, 선형 스케일링(batch 6→32 이면 lr ×5.3)을 그대로 적용하면
+파국적 망각이 다시 온다. batch 32 라면 `lr0 0.002` 정도까지만.
+
+### JupyterLab 에서 돌릴 때
+
+**노트북 셀에서 학습을 돌리지 말 것.** 커널이 재시작되거나 브라우저 연결이 끊기면
+3시간짜리 학습이 사라진다. JupyterLab 터미널에서 `tmux` 를 쓴다.
+
+```bash
+tmux new -s train
+conda activate drone
+python train_person.py ...        # 여기서 실행
+# Ctrl+B, D 로 분리 — 브라우저를 닫아도 계속 돈다
+tmux attach -t train              # 다시 붙기
+nvidia-smi -l 5                   # 다른 창에서 GPU 확인
+```
 
 ---
 
@@ -128,7 +161,7 @@ extra = dict(hsv_h=0.02, hsv_s=0.8, hsv_v=0.5,
 python make_pose3_dataset.py --wisard exclude
 python train_person.py --stage 1 --data configs/data_pose3_sn.yaml \
   --weights weights/yolov8s_stage1_all.pt --name pose3_rot \
-  --epochs 35 --imgsz 960 --batch 16 --lr0 0.001 --patience 10 --freeze 10
+  --epochs 35 --imgsz 960 --batch 6 --lr0 0.001 --patience 10 --freeze 10   # 8차와 동일 조건
 python eval_pose3.py --weights weights/yolov8s_pose3_sn_freeze.pt \
                                runs_person/pose3_rot/weights/best.pt
 ```
@@ -142,7 +175,7 @@ python eval_pose3.py --weights weights/yolov8s_pose3_sn_freeze.pt \
 ```bash
 python train_person.py --stage 1 --data configs/data_pose3_sn.yaml \
   --weights weights/yolov8s_stage1_all.pt --name pose3_1280 \
-  --epochs 35 --imgsz 1280 --batch 8 --lr0 0.001 --patience 10 --freeze 10
+  --epochs 35 --imgsz 1280 --batch 12 --lr0 0.001 --patience 10 --freeze 10
 ```
 
 ### C. 동결 범위 탐색
@@ -154,7 +187,7 @@ python train_person.py --stage 1 --data configs/data_pose3_sn.yaml \
 for f in 0 6 10 15 22; do
   python train_person.py --stage 1 --data configs/data_pose3_sn.yaml \
     --weights weights/yolov8s_stage1_all.pt --name pose3_f$f \
-    --epochs 25 --imgsz 960 --batch 16 --lr0 0.001 --freeze $f
+    --epochs 25 --imgsz 960 --batch 16 --lr0 0.001 --freeze $f   # 탐색이라 batch 키워도 됨
 done
 ```
 
