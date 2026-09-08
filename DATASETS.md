@@ -12,8 +12,8 @@
 ```bash
 cd ~/drone_yolo          # 저장소 루트
 mkdir -p data/raw && cd data/raw
-sudo apt update && sudo apt install -y git-lfs unzip p7zip-full aria2 tmux
-git lfs install
+sudo apt update && sudo apt install -y unzip p7zip-full aria2 tmux rclone
+pip install gdown
 df -h .                  # 여유 공간 확인 — 원본만 200GB 안팎, 산출물 포함 시 더
 ```
 
@@ -33,10 +33,26 @@ Scenarios*, WACV 2024. 42,825 프레임 · 5.4K 영상에서 추출 · 가시도
 - 논문 <https://arxiv.org/abs/2309.09518>
 - 배포 <https://github.com/ArtRuss/NOMAD>
 
+**배포는 Google Drive 폴더 하나다.** 저장소에는 안내만 있고 데이터가 없다.
+
 ```bash
-git clone https://github.com/ArtRuss/NOMAD.git NOMAD_repo
-# 저장소 안내에 따라 실제 이미지·라벨을 받아 아래 구조로 맞춘다
+cd ~/drone_yolo/data/raw
+pip install gdown
+
+# 폴더 통째로. 파일이 많아 중간에 끊기면 같은 명령을 다시 돌리면 이어받는다
+gdown --folder --remaining-ok -O NOMAD   "https://drive.google.com/drive/folders/1zRiOzedR-PzO1bps5I1vb6jtVoQHFWzg"
 ```
+
+> **gdown 이 막히면 rclone 을 쓴다.** Google Drive 폴더는 파일이 많으면
+> gdown 이 API 한도에 걸린다. 100명 × 11영상이라 걸릴 가능성이 높다.
+>
+> ```bash
+> rclone config          # n → drive → 스코프 1(전체읽기) → 브라우저 인증
+> rclone copy gdrive:NOMAD ./NOMAD -P --transfers 4
+> ```
+
+**우리가 실제로 쓰는 것은 `annotations/` 와 `images/` 뿐이다.**
+`videos/`(5.4K 원본)는 용량만 크고 `nomad_prep.py` 가 쓰지 않는다. 용량을 아끼려면 건너뛴다.
 
 **우리 스크립트가 기대하는 구조** (`nomad_prep.py`)
 
@@ -45,7 +61,14 @@ data/raw/NOMAD/
 ├── activityLabels.json      # 배우·거리별 활동 구간 (자세 라벨의 근거)
 ├── annotations.json
 ├── metadata.json
-└── <이미지 폴더>
+├── images/Actor001..Actor100/
+└── labels/Actor001..Actor100/
+```
+
+원본은 `annotations/` 하위에 json 이 모여 있다. 위 구조가 되도록 옮긴다.
+
+```bash
+mv NOMAD/annotations/*.json NOMAD/
 ```
 
 > `activityLabels.json` 에 형식이 깨진 구간이 4개 있다(4,606개 중).
@@ -61,8 +84,31 @@ Wilderness Search and Rescue*, IROS 2022. 가시광 + 열화상.
 - 논문 <https://arxiv.org/abs/2309.04453>
 - 프로젝트 <https://sites.google.com/uw.edu/wisard/>
 
-프로젝트 페이지의 안내에 따라 받는다. **우리는 가시광(VIS)만 쓴다** — 열화상은
-우리 카메라(IMX415)에 없다.
+**Google Drive 단일 파일 40.54 GB.**
+
+```bash
+cd ~/drone_yolo/data/raw
+gdown 1PKjGCqUszHH1nMbXUBTwPSDqRabAt_ht -O WiSARDv1.zip
+unzip -q WiSARDv1.zip -d WiSARD && rm WiSARDv1.zip
+```
+
+용량이 커서 Google Drive 바이러스 검사 안내에 걸리면 `--fuzzy` 를 붙인다.
+
+```bash
+gdown --fuzzy "https://drive.google.com/file/d/1PKjGCqUszHH1nMbXUBTwPSDqRabAt_ht/view" -O WiSARDv1.zip
+```
+
+먼저 시험해 보려면 표본(971.6 MB)이 있다.
+
+```bash
+gdown 1uSgMXuZGVCrWM_151UcykyHejxxaVHOo -O WiSARD_sample.zip
+```
+
+**우리는 가시광(VIS)만 쓴다** — 열화상은 우리 카메라(IMX415)에 없다.
+받은 뒤 `*_IR_*` 폴더를 지우면 용량이 절반 가까이 준다.
+
+> 배포 페이지에 **MIT 계열 라이선스**로 적혀 있다. 다른 셋보다 조건이 느슨하지만,
+> 재배포 전에 페이지에서 한 번 더 확인할 것. 인용은 IROS 2022 논문으로 한다.
 
 **기대 구조** (`wisard_prep.py`)
 
@@ -84,8 +130,21 @@ Barekatain 외, CVPR 2017 Workshops. 4K 드론 영상 43편 + 프레임별 자�
 
 - 공식 <http://okutama-action.org/>
 
+**공식 배포는 Dropbox 폴더 하나인데, 현재 접근이 막혀 있다.**
+
+<https://www.dropbox.com/scl/fo/9qvpsb3fsamvqzsa12149/APTyV-f01XLnJ0WFpZSBLOE>
+
+이미 노트북에 받아 둔 것이 있으므로 **서버로 직접 복사하는 편이 빠르다** (약 9.6 GB).
+
 ```bash
-# 공식 사이트의 배포 링크를 따른다 (TrainSetVideos / TestSetFrames / Labels)
+# 노트북(Windows)에서 — MobaXterm 터미널 또는 PowerShell
+scp -r "C:/Users/timjj/Desktop/캡스톤/drone_dev/data/raw/okutama"     <계정>@<서버IP>:~/drone_yolo/data/raw/
+```
+
+MobaXterm 왼쪽 SFTP 패널에 끌어다 놓아도 된다. 링크가 다시 열리면 아래를 쓴다.
+
+```bash
+pip install dropbox-downloader   # 또는 브라우저로 받아 scp
 ```
 
 **기대 구조** (`okutama_prep.py`, `okutama3_prep.py`)
