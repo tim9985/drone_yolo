@@ -124,6 +124,8 @@ python make_configs.py    # ★ configs/*.yaml 의 절대경로를 이 서버 �
 
 **`make_configs.py` 를 빼먹으면 안 된다.** 저장소의 yaml 에는 Windows 절대경로가 박혀 있다.
 
+각 데이터셋의 **정확한 출처·다운로드 절차·기대 폴더 구조**는 [`DATASETS.md`](DATASETS.md) 에 있다.
+
 ---
 
 ## 4. 가중치 이관
