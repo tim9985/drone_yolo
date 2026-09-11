@@ -139,6 +139,8 @@ python make_configs.py    # ★ configs/*.yaml 의 절대경로를 이 서버 �
 
 노트북에서 직접 복사하거나(scp), 없으면 `stage1_all` 부터 재학습해야 한다(수 시간).
 
+**각 가중치가 어디서 왔고 무엇으로 학습됐는지는 [`WEIGHTS.md`](WEIGHTS.md) 에 있다.**
+
 ---
 
 ## 5. 다음 실험 — 우선순위대로
