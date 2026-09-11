@@ -35,21 +35,30 @@ Scenarios*, WACV 2024. 42,825 프레임 · 5.4K 영상에서 추출 · 가시도
 
 **배포는 Google Drive 폴더 하나다.** 저장소에는 안내만 있고 데이터가 없다.
 
-```bash
-cd ~/drone_yolo/data/raw
-pip install gdown
+**rclone 으로 받는다.** 서버에서 실제로 받은 방법이다. `gdown --folder` 는
+폴더당 파일 50개 제한이 있고, gdown 5.x 에는 `--remaining-ok` 옵션이 없어 실패한다.
 
-# 폴더 통째로. 파일이 많아 중간에 끊기면 같은 명령을 다시 돌리면 이어받는다
-gdown --folder --remaining-ok -O NOMAD   "https://drive.google.com/drive/folders/1zRiOzedR-PzO1bps5I1vb6jtVoQHFWzg"
+```bash
+# 1) 원격 등록 — 서버엔 브라우저가 없으므로 토큰은 노트북에서 받는다
+rclone config                 # n → 이름 gdrive → drive → 스코프 1 → auto config 'n'
+#   노트북에서: rclone authorize "drive"  → 나온 토큰을 서버 프롬프트에만 붙여넣는다
+#   (토큰은 채팅·문서에 남기지 말 것)
+
+# 2) 공유 폴더를 루트로 지정 — 'config update' 는 OAuth 를 다시 띄우므로 환경변수로
+export RCLONE_DRIVE_ROOT_FOLDER_ID=1zRiOzedR-PzO1bps5I1vb6jtVoQHFWzg
+rclone lsd gdrive:            # annotations / images / labels / videos 가 보여야 한다
+                              # '내 드라이브' 폴더가 보이면 export 가 빠진 것
+
+# 3) 받기 — 끊기면 같은 명령을 다시 돌리면 받은 파일은 건너뛴다
+cd ~/drone_yolo/data/raw
+rclone copy gdrive:annotations ./NOMAD -P
+rclone copy gdrive:labels ./NOMAD/labels -P \
+  --transfers 32 --checkers 32 --drive-pacer-min-sleep 10ms --drive-pacer-burst 200
+rclone copy gdrive:images ./NOMAD/images -P \
+  --transfers 16 --checkers 32 --drive-pacer-min-sleep 10ms --drive-pacer-burst 200
 ```
 
-> **gdown 이 막히면 rclone 을 쓴다.** Google Drive 폴더는 파일이 많으면
-> gdown 이 API 한도에 걸린다. 100명 × 11영상이라 걸릴 가능성이 높다.
->
-> ```bash
-> rclone config          # n → drive → 스코프 1(전체읽기) → 브라우저 인증
-> rclone copy gdrive:NOMAD ./NOMAD -P --transfers 4
-> ```
+`labels/` 는 작은 파일 수천 개라 pacer 옵션 없이는 매우 느리다.
 
 **우리가 실제로 쓰는 것은 `annotations/` 와 `images/` 뿐이다.**
 `videos/`(5.4K 원본)는 용량만 크고 `nomad_prep.py` 가 쓰지 않는다. 용량을 아끼려면 건너뛴다.
@@ -88,15 +97,12 @@ Wilderness Search and Rescue*, IROS 2022. 가시광 + 열화상.
 
 ```bash
 cd ~/drone_yolo/data/raw
-gdown 1PKjGCqUszHH1nMbXUBTwPSDqRabAt_ht -O WiSARDv1.zip
-unzip -q WiSARDv1.zip -d WiSARD && rm WiSARDv1.zip
+gdown --continue 1PKjGCqUszHH1nMbXUBTwPSDqRabAt_ht -O WiSARDv1.zip   # 끊기면 같은 명령으로 이어받기
+unzip -tq WiSARDv1.zip && unzip -q WiSARDv1.zip -d WiSARD && rm WiSARDv1.zip
 ```
 
-용량이 커서 Google Drive 바이러스 검사 안내에 걸리면 `--fuzzy` 를 붙인다.
-
-```bash
-gdown --fuzzy "https://drive.google.com/file/d/1PKjGCqUszHH1nMbXUBTwPSDqRabAt_ht/view" -O WiSARDv1.zip
-```
+`unzip -t` 에서 오류가 나면 풀지 말고 지운 뒤 다시 받는다. (gdown 5.x 는 파일 id 를
+그대로 받으므로 `--fuzzy` 는 필요 없다.)
 
 먼저 시험해 보려면 표본(971.6 MB)이 있다.
 

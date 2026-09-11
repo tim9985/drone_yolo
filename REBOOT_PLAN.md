@@ -4,6 +4,10 @@
 
 작성 2026-09-11
 
+> **2026-09-12 상태** — 서버는 이 계획 대신 `EXPERIMENTS.md` 의 E1~E8(COCO 사전학습에서
+> 새로 시작하는 1클래스 탐지 스윕)을 진행 중이다. 회전 증강(7단계)은 그쪽에 이미 반영됐다.
+> 이 문서는 **3클래스 자세 트랙(pose3)을 서버에서 재개할 때** 쓴다. 전체 맥락은 `CLAUDE.md`.
+
 ---
 
 ## 먼저 알아둘 것
@@ -157,8 +161,8 @@ PY
 노트북 MobaXterm SFTP 패널로 `~/drone_dev/weights/` 에 넣는다.
 
 ```
-yolov8s_stage1_all.pt        22 MB  ← 모든 실험의 시작점
-yolov8s_pose3_sn_freeze.pt   22 MB  ← 8차 기준선
+yolov8s_stage1_all.pt        64 MB  ← 모든 실험의 시작점 (옵티마이저 상태 포함)
+yolov8s_pose3_sn_freeze.pt   21.5 MB  ← 8차 기준선
 ```
 
 ---
